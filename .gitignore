@@ -88,7 +88,6 @@ coverage.xml
 # 🌐 Deployment & Hosting
 .vercel
 .netlify
-# Using Render deployment - no extra config files needed
 
 # 🗃️ Database Files (if any)
 *.db

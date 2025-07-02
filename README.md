@@ -8,7 +8,7 @@ A production-ready, AI-powered appointment booking system that integrates with G
 - 📅 **Google Calendar Integration** - Seamless calendar management with service account
 - ⏰ **Business Rules Enforcement** - Automatic validation of business hours (10 AM - 6 PM, weekdays only)
 - 🔒 **Production Security** - All sensitive data properly protected and gitignored
-- 🚀 **Deployment Ready** - Configured for Render deployment
+- 🚀 **Deployment Ready** - Ready for cloud deployment
 - 💬 **Interactive Chat UI** - Beautiful Streamlit interface for demos and real use
 
 ## 🛠️ Quick Setup
@@ -44,32 +44,14 @@ GROQ_API_KEY="your_actual_groq_api_key"
 streamlit run streamlit_app.py
 ```
 
-## 🚀 Render Deployment
+## 🚀 Deployment
 
-### Step-by-Step Deployment
-1. **Push to GitHub**: Commit your code to a GitHub repository
-2. **Connect to Render**: 
-   - Go to [Render.com](https://render.com)
-   - Create new Web Service
-   - Connect your GitHub repository
-3. **Configure Render Settings**:
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0`
-4. **Set Environment Variables** in Render dashboard:
-   ```
-   GROQ_API_KEY=your_actual_groq_api_key_here
-   GOOGLE_CREDENTIALS_PATH=config/credentials/service_account.json
-   ```
-5. **Upload Service Account File**:
-   - Upload your `service_account.json` to Render's file system
-   - Place at path: `config/credentials/service_account.json`
-6. **Deploy**: Click Deploy and your app will be live!
+Ready for deployment on multiple cloud platforms. The project includes a `Procfile` for easy deployment.
 
-### Render Configuration
-- **Environment**: Node.js (for build) + Python
-- **Region**: Choose closest to your users
-- **Instance Type**: Starter (free tier available)
-- **Auto-Deploy**: Enable for automatic deployments on Git push
+### Local Development
+```bash
+streamlit run streamlit_app.py
+```
 
 ## 📁 Project Structure
 
@@ -145,27 +127,21 @@ The system provides intelligent responses for:
 
 ## 🆘 Troubleshooting
 
-### Common Deployment Issues
-
-**"Build failed on Render"**
-- Check that `requirements.txt` has all dependencies
-- Ensure Python version compatibility
-- Verify no syntax errors in code
+### Common Issues
 
 **"Google Calendar access denied"**
-- Upload `service_account.json` to correct path on Render
-- Share your Google Calendar with the service account email
-- Check environment variable `GOOGLE_CREDENTIALS_PATH`
+- Share your Google Calendar with the service account email: `appointment-bot@mythic-fulcrum-464610-n2.iam.gserviceaccount.com`
+- Check that Google Calendar API is enabled in your Google Cloud Console
+- Verify credentials are properly configured
 
 **"Groq API error"**
-- Verify `GROQ_API_KEY` environment variable is set correctly in Render
+- Verify `GROQ_API_KEY` environment variable is set correctly
 - Check Groq console for quota/billing status
 - Ensure API key has proper permissions
 
-**"Streamlit app not loading"**
-- Check Render logs for startup errors
-- Verify start command: `streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0`
-- Ensure all dependencies are installed
+**"Module not found errors"**
+- Install dependencies: `pip install -r requirements.txt`
+- Check Python path if running from subdirectories
 
 ## 🔧 Development
 
@@ -186,7 +162,7 @@ The system provides intelligent responses for:
 ## 🚀 Ready for Demo?
 
 1. ✅ Security: All sensitive data hidden
-2. ✅ Deployment: Ready for Render deployment
+2. ✅ Deployment: Ready for cloud deployment
 3. ✅ Business Rules: Professional appointment management
 4. ✅ UI: Beautiful chat interface
 5. ✅ Integration: Google Calendar fully connected
