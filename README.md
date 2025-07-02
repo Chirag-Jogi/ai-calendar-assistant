@@ -180,9 +180,6 @@ The system provides intelligent responses for:
 - Production: Set environment variables on hosting platform
 - Never commit sensitive files to Git!
 
-## 📄 License
-
-Built for TailorTalk - Production Ready Appointment Assistant
 
 ---
 
