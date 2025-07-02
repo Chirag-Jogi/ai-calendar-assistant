@@ -1,0 +1,18 @@
+# Render Deployment Configuration
+# AI Appointment Assistant - Production Ready
+
+services:
+  - type: web
+    name: ai-appointment-assistant
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false  # Set manually in Render dashboard
+      - key: GOOGLE_CREDENTIALS_PATH
+        value: config/credentials/service_account.json
+      - key: PORT
+        value: 10000
+    healthCheckPath: /

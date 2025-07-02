@@ -1,0 +1,136 @@
+# AI Appointment Assistant - Security & Privacy
+# ==========================================
+
+# 🔐 SENSITIVE CREDENTIALS - NEVER COMMIT THESE!
+.env
+*.env
+.env.local
+.env.production
+.env.development
+
+# Google Calendar Credentials
+config/credentials/
+*.json
+credentials.json
+service_account.json
+token.json
+client_secret.json
+
+# API Keys & Secrets
+groq_api_key.txt
+google_credentials.json
+secrets/
+private/
+
+# 🐍 Python & Virtual Environment
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+pyvenv.cfg
+
+# 💻 IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 📊 Logs & Debug Files
+*.log
+logs/
+debug.log
+error.log
+app.log
+
+# 🧪 Testing & Coverage
+.coverage
+.pytest_cache/
+.tox/
+htmlcov/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# 📱 Streamlit
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# 🌐 Deployment & Hosting
+.vercel
+.netlify
+# Using Render deployment - no extra config files needed
+
+# 🗃️ Database Files (if any)
+*.db
+*.sqlite
+*.sqlite3
+database/
+
+# 📁 Temporary & Cache Files
+.cache/
+.tmp/
+temp/
+.temp/
+*.tmp
+*.bak
+*.backup
+
+# 🏗️ Build Artifacts
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# 📝 Documentation Generated Files
+docs/_build/
+site/
+
+# 🔧 OS & System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# 🎯 Project Specific
+test_output/
+demo_data/
+backup/
+old/
+archive/
+
+# END OF GITIGNORE
