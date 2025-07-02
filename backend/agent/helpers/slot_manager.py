@@ -23,12 +23,24 @@ class SlotManager:
             slots = calendar_service.get_available_slots(check_date)
             
             if slots:  # If this date has available slots
+                # Safely get first slot time
+                first_slot_time = None
+                if slots:
+                    first_slot = slots[0]
+                    if 'start_time' in first_slot:
+                        first_slot_time = first_slot['start_time']
+                    elif 'start' in first_slot:
+                        if isinstance(first_slot['start'], str):
+                            first_slot_time = first_slot['start']
+                        else:
+                            first_slot_time = first_slot['start'].strftime('%H:%M')
+                
                 alternatives.append({
                     'date': check_date.strftime('%Y-%m-%d'),
                     'display_date': check_date.strftime('%B %d, %Y'),
                     'day_name': check_date.strftime('%A'),
                     'slots_count': len(slots),
-                    'first_slot': slots[0]['start_time'] if slots else None
+                    'first_slot': first_slot_time
                 })
                 
                 # Stop after finding required suggestions
@@ -125,19 +137,75 @@ class SlotManager:
     @staticmethod
     def get_available_slots_with_details(target_date: datetime) -> Dict:
         """Get available slots with additional metadata"""
-        slots = calendar_service.get_available_slots(target_date)
-        
-        return {
-            'date': target_date.strftime('%Y-%m-%d'),
-            'display_date': target_date.strftime('%B %d, %Y'),
-            'day_name': target_date.strftime('%A'),
-            'slots': slots,
-            'total_slots': len(slots),
-            'has_morning_slots': any(int(slot['start_time'].split(':')[0]) < 12 for slot in slots),
-            'has_afternoon_slots': any(int(slot['start_time'].split(':')[0]) >= 12 for slot in slots),
-            'earliest_slot': slots[0]['start_time'] if slots else None,
-            'latest_slot': slots[-1]['start_time'] if slots else None
-        }
+        try:
+            slots = calendar_service.get_available_slots(target_date)
+            
+            # Handle case where slots might be empty or have different formats
+            if not slots:
+                return {
+                    'date': target_date.strftime('%Y-%m-%d'),
+                    'display_date': target_date.strftime('%B %d, %Y'),
+                    'day_name': target_date.strftime('%A'),
+                    'slots': [],
+                    'total_slots': 0,
+                    'has_morning_slots': False,
+                    'has_afternoon_slots': False,
+                    'earliest_slot': None,
+                    'latest_slot': None
+                }
+            
+            # Helper function to safely get time string from slot
+            def get_time_string(slot):
+                if 'start_time' in slot:
+                    return slot['start_time']
+                elif 'start' in slot:
+                    if isinstance(slot['start'], str):
+                        return slot['start']
+                    else:
+                        return slot['start'].strftime('%H:%M')
+                return '00:00'
+            
+            # Safely parse times for morning/afternoon checks
+            def is_morning_slot(slot):
+                try:
+                    time_str = get_time_string(slot)
+                    hour = int(time_str.split(':')[0])
+                    return hour < 12
+                except:
+                    return False
+            
+            def is_afternoon_slot(slot):
+                try:
+                    time_str = get_time_string(slot)
+                    hour = int(time_str.split(':')[0])
+                    return hour >= 12
+                except:
+                    return False
+            
+            return {
+                'date': target_date.strftime('%Y-%m-%d'),
+                'display_date': target_date.strftime('%B %d, %Y'),
+                'day_name': target_date.strftime('%A'),
+                'slots': slots,
+                'total_slots': len(slots),
+                'has_morning_slots': any(is_morning_slot(slot) for slot in slots),
+                'has_afternoon_slots': any(is_afternoon_slot(slot) for slot in slots),
+                'earliest_slot': get_time_string(slots[0]) if slots else None,
+                'latest_slot': get_time_string(slots[-1]) if slots else None
+            }
+        except Exception as e:
+            print(f"❌ Error in get_available_slots_with_details: {str(e)}")
+            return {
+                'date': target_date.strftime('%Y-%m-%d'),
+                'display_date': target_date.strftime('%B %d, %Y'),
+                'day_name': target_date.strftime('%A'),
+                'slots': [],
+                'total_slots': 0,
+                'has_morning_slots': False,
+                'has_afternoon_slots': False,
+                'earliest_slot': None,
+                'latest_slot': None
+            }
     
     @staticmethod
     def create_appointment_with_validation(title: str, start_time: datetime, 
@@ -153,7 +221,7 @@ class SlotManager:
                 }
             
             # Create the appointment
-            result = calendar_service.create_appointment(title, start_time, end_time, description)
+            result = calendar_service.create_event(title, start_time, end_time, description)
             
             if result['success']:
                 return {
@@ -164,7 +232,7 @@ class SlotManager:
                         'start_time': start_time.strftime('%H:%M'),
                         'end_time': end_time.strftime('%H:%M'),
                         'duration_minutes': int((end_time - start_time).total_seconds() / 60),
-                        'event_link': result.get('event_link'),
+                        'event_link': result.get('html_link'),
                         'event_id': result.get('event_id')
                     },
                     'message': f"Appointment created successfully for {start_time.strftime('%B %d, %Y at %I:%M %p')}"

@@ -1,18 +1,7 @@
-# AI Appointment Assistant - Production Dependencies
-# Core web framework
-streamlit>=1.28.0
-
-# HTTP client for AI API calls
-httpx>=0.25.0
-
-# Google Calendar integration
-google-auth>=2.23.0
-google-auth-oauthlib>=1.1.0
-google-auth-httplib2>=0.1.0
-google-api-python-client>=2.108.0
-
-# Environment & configuration
-python-dotenv>=1.0.0
-
-# Optional: For additional HTTP requests if needed
-requests>=2.31.0
+streamlit==1.29.0
+python-dotenv==1.0.0
+httpx==0.25.2
+google-auth==2.23.4
+google-auth-oauthlib==1.1.0
+google-auth-httplib2==0.1.1
+google-api-python-client==2.108.0

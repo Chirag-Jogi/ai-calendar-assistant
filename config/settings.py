@@ -1,9 +1,8 @@
 
 import os
-import streamlit as st
 from dotenv import load_dotenv
 
-# Load environment variables from .env file (local development)
+# Load environment variables from .env file
 load_dotenv()
 
 class Settings:
@@ -16,30 +15,39 @@ class Settings:
         self.GOOGLE_CREDENTIALS_JSON = self._get_secret("GOOGLE_CREDENTIALS_JSON")
         
         # Application Settings
-        self.APP_NAME = "AI Appointment Assistant"
+        self.APP_NAME = "AI Calendar Assistant"
         self.DEBUG = True
         self.HOST = "0.0.0.0"
         self.PORT = 8000
     
     @staticmethod
     def _get_secret(key):
-        """Get secret from Streamlit secrets or environment variables"""
-        # Try Streamlit secrets first (for cloud deployment)
+        """Get secret from environment variables or Streamlit secrets"""
+        # First try environment variables (most reliable)
+        value = os.getenv(key)
+        if value:
+            return value
+            
+        # Try Streamlit secrets if available (for cloud deployment)
         try:
+            import streamlit as st
             return st.secrets[key]
         except:
-            # Fallback to environment variables (for local development)
-            return os.getenv(key)
+            return None
     
-    # Validating required environment variables
     def validate(self):
+        """Validate settings - don't crash on missing values"""
         if not self.GROQ_API_KEY:
-            raise ValueError("GROQ_API_KEY is required")
+            print("⚠️ Warning: GROQ_API_KEY not found")
+            return False
         
-        # Accept either credentials method
         if not self.GOOGLE_CREDENTIALS_PATH and not self.GOOGLE_CREDENTIALS_JSON:
-            raise ValueError("Either GOOGLE_CREDENTIALS_PATH or GOOGLE_CREDENTIALS_JSON is required")
+            print("⚠️ Warning: No Google credentials found")
+            return False
+            
+        return True
 
-# Create a global settings instance
+# Create settings instance
 settings = Settings()
-settings.validate()
+# Don't crash on validation failure
+validation_result = settings.validate()

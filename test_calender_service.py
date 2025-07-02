@@ -22,7 +22,7 @@ def test_calendar_service():
         # Uncomment below if you want to test appointment creation
         test_start = tomorrow.replace(hour=10, minute=0, second=0, microsecond=0)
         test_end = test_start + timedelta(hours=1)
-        result = calendar_service.create_appointment(
+        result = calendar_service.create_event(
             "Test Appointment", 
             test_start, 
             test_end, 

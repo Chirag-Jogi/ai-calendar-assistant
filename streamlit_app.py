@@ -1,28 +1,32 @@
-"""
-Streamlit Frontend for AI Appointment Assistant
-Professional web interface for TailorTalk demo
-"""
 import streamlit as st
+
+# MUST be the very first Streamlit command - DO NOT MOVE OR CHANGE THIS
+st.set_page_config(
+    page_title="🤖 AI Calendar Assistant",
+    page_icon="📅",
+    layout="wide"
+)
+
+# Now import everything else - ORDER MATTERS!
 import sys
 import os
 from datetime import datetime, timedelta
-import json
 
-# Add backend to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# Add project root to path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from backend.agent.ai_assistant import ai_assistant
+def safe_import():
+    """Safely import modules with error handling"""
+    try:
+        from backend.agent.ai_assistant import ai_assistant
+        from backend.calender_service import calendar_service
+        return ai_assistant, calendar_service, None
+    except Exception as e:
+        return None, None, str(e)
 
-# Page configuration
-st.set_page_config(
-    page_title="AI Appointment Assistant",
-    page_icon="📅",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# Custom CSS for professional styling
-st.markdown("""
+def apply_custom_css():
+    """Apply custom CSS styling"""
+    st.markdown("""
 <style>
     .main-header {
         text-align: center;
@@ -297,6 +301,17 @@ def display_alternative_dates(suggested_dates, chat_index=0):
 def process_user_input(user_input):
     """Process user input and get AI response"""
     try:
+        # Get AI assistant and calendar service
+        ai_assistant, calendar_service, error = safe_import()
+        
+        if error:
+            st.error(f"❌ Import error: {error}")
+            return
+            
+        if not ai_assistant:
+            st.error("❌ AI Assistant not available")
+            return
+        
         # Show thinking indicator
         with st.spinner("🤖 AI is thinking..."):
             # Get AI response
@@ -344,6 +359,9 @@ def display_demo_examples():
 
 def main():
     """Main application function"""
+    # Apply custom styling first
+    apply_custom_css()
+    
     # Initialize session state
     initialize_session_state()
     
