@@ -13,6 +13,7 @@ except ImportError:
     print("⚠️ Google API libraries not available")
 
 from config.settings import settings
+from config.business_hours import BUSINESS_START_HOUR, BUSINESS_END_HOUR
 
 # Google Calendar API Configuration
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -91,9 +92,9 @@ class CalendarService:
         try:
             print(f"📅 Getting available slots for: {date.strftime('%Y-%m-%d')}")
             
-            # Define business hours (9 AM to 5 PM)
-            start_hour = 9
-            end_hour = 17
+            # Define business hours using centralized config
+            start_hour = BUSINESS_START_HOUR
+            end_hour = BUSINESS_END_HOUR
             
             # Create start and end times for the day
             day_start = date.replace(hour=start_hour, minute=0, second=0, microsecond=0)

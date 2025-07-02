@@ -4,6 +4,7 @@ Clean, consistent response formatting for better UX
 """
 from datetime import datetime
 from typing import Dict, List, Optional
+from config.business_hours import get_business_hours_display
 
 class ResponseBuilder:
     """Utility class for building consistent, user-friendly responses"""
@@ -175,14 +176,14 @@ What would you like to do today?"""
         return {
             'response': f"""⚠️ Sorry, {requested_time} is outside our business hours.
 
-🕘 **Business Hours**: 10:00 AM - 6:00 PM (Monday to Friday)
+🕘 **Business Hours**: {get_business_hours_display()} (Monday to Friday)
 
 ✅ **Available times today**: {suggestions}
 
 Please choose a time within business hours for your appointment.""",
             'action': 'business_hours_violation',
             'suggested_times': suggested_times,
-            'business_hours': '10:00 AM - 6:00 PM',
+            'business_hours': get_business_hours_display(),
             'success': False,
             'error': True
         }
@@ -205,7 +206,7 @@ Please choose a time within business hours for your appointment.""",
             'response': f"""⚠️ Sorry, we don't operate on {day_name}.
 
 🗓️ **Business Days**: Monday to Friday only
-🕘 **Business Hours**: 10:00 AM - 6:00 PM
+🕘 **Business Hours**: {get_business_hours_display()}
 
 ✅ **Next available business days**: {suggestions}
 

@@ -2,9 +2,10 @@
 Slot Management and Availability Logic
 Handles calendar slots, availability checks, and suggestions
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from typing import List, Dict
 from backend.calender_service import calendar_service
+from config.business_hours import BUSINESS_START_HOUR, BUSINESS_END_HOUR, is_business_day, get_business_hours_display
 
 class SlotManager:
     """Utility class for managing appointment slots and availability"""
@@ -64,7 +65,7 @@ class SlotManager:
             
             # **BUSINESS DAYS VALIDATION (Monday=0, Sunday=6)**
             weekday = target_date.weekday()
-            if weekday >= 5:  # Saturday=5, Sunday=6
+            if not is_business_day(weekday):
                 day_name = target_date.strftime('%A')
                 return {
                     'available': False,
@@ -74,8 +75,8 @@ class SlotManager:
                 }
             
             # **BUSINESS HOURS VALIDATION**
-            business_start = time(10, 0)  # 10:00 AM
-            business_end = time(18, 0)    # 6:00 PM
+            business_start = time(BUSINESS_START_HOUR, 0)
+            business_end = time(BUSINESS_END_HOUR, 0)
             
             requested_time_obj = start_time.time()
             
@@ -83,7 +84,7 @@ class SlotManager:
             if requested_time_obj < business_start:
                 return {
                     'available': False,
-                    'reason': f'Requested time {time_str} is before business hours (10:00 AM - 6:00 PM)',
+                    'reason': f'Requested time {time_str} is before business hours ({get_business_hours_display()})',
                     'suggested_times': ['10:00', '11:00', '12:00', '14:00'],
                     'business_hours_violation': True
                 }
@@ -92,7 +93,7 @@ class SlotManager:
             if requested_time_obj >= business_end:
                 return {
                     'available': False,
-                    'reason': f'Requested time {time_str} is after business hours (10:00 AM - 6:00 PM)',
+                    'reason': f'Requested time {time_str} is after business hours ({get_business_hours_display()})',
                     'suggested_times': ['14:00', '15:00', '16:00', '17:00'],
                     'business_hours_violation': True
                 }
@@ -258,8 +259,8 @@ class SlotManager:
             current_date += timedelta(days=1)
             days_checked += 1
             
-            # Check if it's a weekday (Monday=0 to Friday=4)
-            if current_date.weekday() < 5:
+            # Check if it's a business day
+            if is_business_day(current_date.weekday()):
                 business_days.append({
                     'date': current_date.strftime('%Y-%m-%d'),
                     'display_date': current_date.strftime('%B %d, %Y'),
