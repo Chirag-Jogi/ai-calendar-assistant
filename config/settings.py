@@ -1,22 +1,35 @@
+
 import os
+import streamlit as st
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from .env file (local development)
 load_dotenv()
 
 class Settings:
-    # API Keys
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+    def __init__(self):
+        # API Keys
+        self.GROQ_API_KEY = self._get_secret("GROQ_API_KEY")
+        
+        # Google Calendar - support both methods
+        self.GOOGLE_CREDENTIALS_PATH = self._get_secret("GOOGLE_CREDENTIALS_PATH")
+        self.GOOGLE_CREDENTIALS_JSON = self._get_secret("GOOGLE_CREDENTIALS_JSON")
+        
+        # Application Settings
+        self.APP_NAME = "AI Appointment Assistant"
+        self.DEBUG = True
+        self.HOST = "0.0.0.0"
+        self.PORT = 8000
     
-    # Google Calendar - support both methods
-    GOOGLE_CREDENTIALS_PATH = os.getenv("GOOGLE_CREDENTIALS_PATH")
-    GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
-    
-    # Application Settings
-    APP_NAME = "AI Appointment Assistant"
-    DEBUG = True
-    HOST = "0.0.0.0"
-    PORT = 8000
+    @staticmethod
+    def _get_secret(key):
+        """Get secret from Streamlit secrets or environment variables"""
+        # Try Streamlit secrets first (for cloud deployment)
+        try:
+            return st.secrets[key]
+        except:
+            # Fallback to environment variables (for local development)
+            return os.getenv(key)
     
     # Validating required environment variables
     def validate(self):
