@@ -5,7 +5,39 @@ from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from config.settings import settings
+import json
 
+# Google Calendar API Configuration
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+def get_calendar_credentials():
+    """Get Google Calendar credentials from file or environment variable"""
+    
+    # Method 1: Try file path first (for local development)
+    if settings.GOOGLE_CREDENTIALS_PATH and os.path.exists(settings.GOOGLE_CREDENTIALS_PATH):
+        credentials = Credentials.from_service_account_file(
+            settings.GOOGLE_CREDENTIALS_PATH,
+            scopes=SCOPES
+        )
+        print("✅ Using credentials from file")
+        return credentials
+    
+    # Method 2: Use JSON content from environment variable (for Railway deployment)
+    elif settings.GOOGLE_CREDENTIALS_JSON:
+        try:
+            credentials_info = json.loads(settings.GOOGLE_CREDENTIALS_JSON)
+            credentials = Credentials.from_service_account_info(
+                credentials_info,
+                scopes=SCOPES
+            )
+            print("✅ Using credentials from environment variable")
+            return credentials
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid GOOGLE_CREDENTIALS_JSON format: {str(e)}")
+    
+    else:
+        raise ValueError("No valid Google credentials found. Please set GOOGLE_CREDENTIALS_PATH or GOOGLE_CREDENTIALS_JSON")
+    
 
 class CalendarService:
     def __init__(self):
