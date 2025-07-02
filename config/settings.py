@@ -8,27 +8,13 @@ class Settings:
     ## Api keys
 
     GROQ_API_KEY=os.getenv("GROQ_API_KEY")
-
-    # Try file path first, then JSON content
-    if os.path.exists(settings.GOOGLE_CREDENTIALS_PATH):
-        credentials = Credentials.from_service_account_file(
-            settings.GOOGLE_CREDENTIALS_PATH,
-            scopes=SCOPES
-        )
-    else:
-        # Use JSON content from environment variable
-        credentials_json = os.environ.get('GOOGLE_CREDENTIALS_JSON')
-        if credentials_json:
-            credentials_info = json.loads(credentials_json)
-            credentials = Credentials.from_service_account_info(
-                credentials_info,
-                scopes=SCOPES
-            )
+    
 
     ## Google Calendar
-    GOOGLE_CREDENTIALS_PATH=os.getenv("GOOGLE_CREDENTIALS_PATH")
+    GOOGLE_CREDENTIALS_PATH=os.getenv("config/credentials/service_account.json")
 
     ## Application Settings
+
 
     APP_NAME="AI Appointment Assistant"
     DEBUG=True
