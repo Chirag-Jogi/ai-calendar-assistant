@@ -2,7 +2,6 @@
 
 A production-ready, AI-powered appointment booking system that integrates with Google Calendar through natural language chat. Built with enterprise-grade security and deployment readiness.
 
-## Streamlit Link -: https://ai-calendar-assistant-vchm7yp9erw4hyze
 ## ✨ Features
 
 - 🗣️ **Natural Language Booking** - Book appointments through conversational AI
