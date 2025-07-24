@@ -2,9 +2,7 @@
 
 A production-ready, AI-powered appointment booking system that integrates with Google Calendar through natural language chat. Built with enterprise-grade security and deployment readiness.
 
-## Streamlit Link -: https://ai-calendar-assistant-vchm7yp9erw4hyzecymnhl.streamlit.app/
-### Disclaimer -  The Link is not working as my free GROQ API IS OVER . Sorry for the the inconvience. You can read my Readme .
-
+## Streamlit Link -: https://ai-calendar-assistant-vchm7yp9erw4hyze
 ## ✨ Features
 
 - 🗣️ **Natural Language Booking** - Book appointments through conversational AI
